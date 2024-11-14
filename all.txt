@@ -1,0 +1,167 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+class SelectiveRepeat {
+private:
+    int windowSize;
+
+public:
+    SelectiveRepeat(int windowSize) : windowSize(windowSize) {}
+
+    void sendFrames(std::vector<int>& frames) {
+        int totalFrames = frames.size();
+        std::vector<bool> acknowledged(totalFrames, false);
+
+        for (int currentFrame = 0; currentFrame < totalFrames; currentFrame++) {
+            if (!acknowledged[currentFrame]) {
+                std::cout << "Frame " << currentFrame << " sent.\n";
+
+                // Simulate acknowledgment
+                if (static_cast<double>(rand()) / RAND_MAX > 0.5) {
+                    acknowledged[currentFrame] = true;
+                    std::cout << "Acknowledgment received for frame: " << currentFrame << "\n";
+                } else {
+                    std::cout << "Frame " << currentFrame << " lost. Resending...\n";
+                }
+            }
+        }
+    }
+};
+
+int main() {
+    srand(static_cast<unsigned>(time(0)));
+    std::vector<int> frames = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int windowSize = 4;
+
+    SelectiveRepeat selectiveRepeat(windowSize);
+    selectiveRepeat.sendFrames(frames);
+
+    return 0;
+}
+---------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+class GoBackN {
+private:
+    int windowSize;
+
+public:
+    GoBackN(int windowSize) : windowSize(windowSize) {}
+
+    void sendFrames(std::vector<int>& frames) {
+        int currentFrame = 0;
+        int totalFrames = frames.size();
+
+        while (currentFrame < totalFrames) {
+            int endFrame = std::min(currentFrame + windowSize, totalFrames);
+            std::cout << "Sending frames from " << currentFrame << " to " << (endFrame - 1) << "\n";
+
+            for (int i = currentFrame; i < endFrame; i++) {
+                std::cout << "Frame " << i << " sent.\n";
+            }
+
+            int ack;
+            if (static_cast<double>(rand()) / RAND_MAX > 0.5) {
+                std::cout << "Acknowledgment lost for frames from " << currentFrame << "\n";
+                ack = currentFrame;
+            } else {
+                ack = currentFrame + 1;
+                std::cout << "Acknowledgment received for frames up to: " << (ack - 1) << "\n";
+            }
+
+            if (ack > currentFrame) {
+                currentFrame = ack;
+            } else {
+                std::cout << "Timeout! Resending frames from " << currentFrame << "\n";
+            }
+        }
+    }
+};
+
+int main() {
+    srand(static_cast<unsigned>(time(0)));
+    std::vector<int> frames = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int windowSize = 4;
+
+    GoBackN goBackN(windowSize);
+    goBackN.sendFrames(frames);
+
+    return 0;
+}
+------------------------------------------------------------------------------------------
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int q = 4, b_size = 10, i_pkt = 4, o_pkt = 1, buf = 0, rem;
+
+    for (int i = 0; i < q; i++) {
+        rem = b_size - buf;
+        if (i_pkt <= rem) {
+            buf += i_pkt;
+        } else {
+            printf("Packet loss = %d\n", i_pkt);
+        }
+        printf("Buffer size = %d out of bucket size = %d\n", buf, b_size);
+        buf -= o_pkt;
+    }
+    return 0;
+}
+-----------------------------------------------------------------------------------
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int bucketSize, outputRate, currentLoad = 0;
+
+    std::cout << "Enter the size of the bucket: ";
+    std::cin >> bucketSize;
+    std::cout << "Enter the output rate: ";
+    std::cin >> outputRate;
+
+    std::cout << "Enter packets for 5 units of time:\n";
+    for (int i = 0; i < 5; i++) {
+        int incoming;
+        std::cin >> incoming;
+        int totalPackets = currentLoad + incoming;
+
+        if (totalPackets > bucketSize) {
+            std::cout << "Packets dropped: " << (totalPackets - bucketSize) << "\n";
+            currentLoad = bucketSize;
+        } else {
+            currentLoad = totalPackets;
+        }
+
+        currentLoad = std::max(0, currentLoad - outputRate);
+        std::cout << "Packets left in the bucket: " << currentLoad << "\n";
+    }
+
+    return 0;
+}
+----------------------------------------------------------------
+from urllib.parse import urlparse, parse_qs
+
+
+urlString = "https://www.example.com/path/to/resource?name=value&key=data"
+try:
+    url = urlparse(urlString)
+
+    protocol = url.scheme
+    domain = url.hostname
+    path = url.path
+    query_string = url.query
+
+    print("Protocol:", protocol)
+    print("Domain:", domain)
+    print("Path:", path)
+    print("Query String:", query_string)
+        
+except Exception as e:
+        print("Invalid URL")
+-----------------------------------------------------------------------
