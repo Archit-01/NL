@@ -148,7 +148,7 @@ int main() {
 from urllib.parse import urlparse, parse_qs
 
 
-urlString = "https://www.example.com/path/to/resource?name=value&key=data"
+urlString = "https://www.youtube.com/watch?v=3XTOtqSp7Mw"
 try:
     url = urlparse(urlString)
 
